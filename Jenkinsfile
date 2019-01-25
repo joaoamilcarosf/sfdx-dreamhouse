@@ -60,6 +60,12 @@ node {
             }
         
 			if (rc != 0) {
+                if (isUnix()) {
+					rc = sh returnStatus: true, script: "${toolbelt} force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+				} else{
+					rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+				}
+
                 error 'push failed'
             }
         }
@@ -74,6 +80,12 @@ node {
 				}
 				
 				if (rc != 0) {
+                    if (isUnix()) {
+					    rc = sh returnStatus: true, script: "${toolbelt} force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+                    } else{
+                        rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+                    }
+
 					error 'apex test run failed'
 				}
 			}
@@ -81,7 +93,11 @@ node {
 		
 		stage('Delete Test Org') {
 			timeout(time: 120, unit: 'SECONDS') {
-				rc = sh returnStatus: true, script: "${toolbelt} force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+                if (isUnix()) {
+					rc = sh returnStatus: true, script: "${toolbelt} force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+				} else{
+					rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:delete --targetusername ${SFDC_USERNAME} --noprompt"
+				}
 				
 				if (rc != 0) {
 					error 'org deletion request failed'
